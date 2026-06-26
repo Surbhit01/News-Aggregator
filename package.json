@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "pi-provider-kimi-code": "^0.6.2",
+    "pi-web-access": "^0.10.7"
+  }
+}
