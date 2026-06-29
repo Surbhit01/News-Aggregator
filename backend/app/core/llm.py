@@ -45,6 +45,7 @@ class LLMProvider:
             return f"[LLM unavailable: no API key configured]"
 
         logger.info(f"LLM call: model={self.model}, tokens={max_tokens}, temp={temperature}")
+        messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
