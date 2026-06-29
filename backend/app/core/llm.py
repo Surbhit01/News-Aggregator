@@ -38,13 +38,13 @@ class LLMProvider:
         """Generate text using the LLM."""
         # Skip API call if no API key configured or LLM is disabled
         if not settings.LLM_ENABLED:
-            logger.debug("LLM disabled via settings — using fallback")
+            logger.info("LLM call SKIPPED — LLM_ENABLED=false")
             return f"[LLM unavailable: disabled]"
         if not settings.LLM_API_KEY and not self.api_key:
-            logger.debug("No LLM API key — using fallback response")
+            logger.info(f"LLM call SKIPPED — no API key. Model={self.model}, Base={self.base_url or 'default'}")
             return f"[LLM unavailable: no API key configured]"
 
-        messages = []
+        logger.info(f"LLM call: model={self.model}, tokens={max_tokens}, temp={temperature}")
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
