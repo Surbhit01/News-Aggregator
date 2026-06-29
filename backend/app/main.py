@@ -41,7 +41,7 @@ app = FastAPI(
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Restrict in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -54,7 +54,7 @@ async def health_check():
     return {"status": "ok", "version": settings.APP_VERSION, "name": settings.APP_NAME}
 
 
-# Register routers
+# Register API routers
 app.include_router(auth.router)
 app.include_router(preferences.router)
 app.include_router(digest.router)

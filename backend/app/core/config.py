@@ -32,8 +32,8 @@ class Settings(BaseSettings):
 
     # RSS / News
     DEFAULT_REFRESH_INTERVAL_MINUTES: int = 30
-    MAX_ARTICLES_PER_SOURCE: int = 10
-    MAX_ARTICLES_TOTAL: int = 10
+    MAX_ARTICLES_PER_SOURCE: int = 5
+    MAX_ARTICLES_TOTAL: int = 5
 
     # Digest
     MORNING_BRIEFING_TIME: str = "07:00"

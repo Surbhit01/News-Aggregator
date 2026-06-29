@@ -58,18 +58,12 @@ async def _generate_key_takeaways_llm(title: str, content: str) -> list:
     # Fallback if LLM fails — extractive from content
     if result.startswith("[LLM unavailable"):
         sentences = [s.strip() for s in content.replace("\n", " ").split(".") if len(s.strip()) > 40]
-        takeaways = [s[:120] for s in sentences[:3]]
-        # If not enough sentences, use distinct parts of the content
-        if len(takeaways) < 3:
-            words = content.split()
-            chunk_size = max(len(words) // 3, 10)
-            for i in range(3 - len(takeaways)):
-                chunk = " ".join(words[i * chunk_size:(i + 1) * chunk_size])
-                if chunk and len(chunk) > 20:
-                    takeaways.append(chunk[:120])
-                else:
-                    takeaways.append(f"Key point {i + 1}: {title}")
-        return takeaways
+        # Deduplicate near-identical sentences
+        unique = []
+        for s in sentences:
+            if not any(s[:50] == u[:50] for u in unique):
+                unique.append(s[:150])
+        return unique[:3] if unique else []
 
     # Parse bullet points from LLM response
     takeaways = []
