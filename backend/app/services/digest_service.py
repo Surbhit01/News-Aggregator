@@ -4,7 +4,7 @@ Orchestrates the agent pipeline for digest generation.
 """
 import asyncio
 import logging
-from typing import Optional, Set
+from typing import Optional, Set, Dict, Any
 from datetime import datetime, timezone
 
 from app.agents.state import AgentState
@@ -19,12 +19,12 @@ logger = logging.getLogger(__name__)
 _generation_tasks: Set[str] = set()
 
 
-async def _run_agent_pipeline(user_id: str, query: Optional[str] = None) -> AgentState:
-    """Run the full LangGraph agent pipeline and return final state."""
+async def _run_agent_pipeline(user_id: str, query: Optional[str] = None) -> Dict[str, Any]:
+    """Run the full LangGraph agent pipeline and return final state as dict."""
     db = SessionLocal()
     try:
         prefs = get_preferences(db, user_id)
-        print(f"User {user_id} preferences: {prefs}")
+        logger.info(f"User {user_id} preferences: {prefs}")
         initial_state = AgentState(
             user_id=user_id,
             explicit_categories=prefs.categories if prefs else ["Technology", "Finance"],
@@ -56,7 +56,7 @@ async def _generate_and_cache(user_id: str, digest_type: str, topic: Optional[st
         else:
             final_state = await _run_agent_pipeline(user_id)
 
-        content = final_state.agent_outputs.get("digest_content", "")
+        content = final_state["agent_outputs"].get("digest_content", "")
 
         if content and "No articles" not in content and "No digest" not in content:
             # Cache it
